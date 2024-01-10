@@ -1,4 +1,4 @@
-package com.example.config.controller.teacher;
+package com.example.controller.teacher;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

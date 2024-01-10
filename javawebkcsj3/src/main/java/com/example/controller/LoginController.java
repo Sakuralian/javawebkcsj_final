@@ -1,4 +1,4 @@
-package com.example.config.controller;
+package com.example.controller;
 
 import com.example.mapper.StudentMapper;
 import com.example.mapper.TeacherMapper;

@@ -1,4 +1,4 @@
-package com.example.config.controller.admin;
+package com.example.controller.admin;
 
 import com.example.pojo.User;
 import jakarta.servlet.http.HttpSession;

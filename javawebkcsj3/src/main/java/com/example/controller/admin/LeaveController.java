@@ -1,4 +1,4 @@
-package com.example.config.controller.admin;
+package com.example.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
