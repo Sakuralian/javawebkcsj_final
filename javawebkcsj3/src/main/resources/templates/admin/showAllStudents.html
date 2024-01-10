@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>学生请假管理系统—-学生管理</title>
+    <!-- Core CSS  -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/glyphicons.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logo.css}">
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pages.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/search.css}">
+    <!-- Boxed-Layout CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/boxed.css}">
+
+
+    <!-- Core Javascript - via CDN -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+
+    <!--模糊查询条件选择-->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var select = document.getElementById('selectOption');
+            var storedValue = localStorage.getItem('selectedOption');
+
+            if (storedValue !== null) {
+                select.value = storedValue;
+                handleStudentChange(); // 调用处理函数，根据选择执行相应逻辑
+            }
+        });
+
+        function handleStudentChange() {
+            var select = document.getElementById('selectOption');
+            var form = document.getElementById('myForm');
+
+            localStorage.setItem('selectedOption', select.value);
+
+            if (select.value === '0') {
+                form.action = /*[[@{/admin/findByStudentName}]]*/ '';
+            } else if (select.value === '1') {
+                form.action = /*[[@{/admin/findByStudentId}]]*/ '';
+            }
+        }
+    </script>
+    <script>
+        function checkAll(obj) {
+            //获取name=id的复选框
+            var boxs = document.getElementsByName("ids");
+            for (var i = 0; i < boxs.length; i++) {
+                boxs[i].checked = obj.checked;
+            }
+        }
+    </script>
+</head>
+<body>
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top" style="background-image: none; background-color: rgb(240, 240, 240);">
+    <div class="pull-left"><a class="navbar-brand" href="#">
+        <div class="navbar-logo"><span class="logo">学生请假管理系统</span></div>
+    </a></div>
+    <div class="pull-right header-btns">
+        <a class="user"><span class="glyphicons glyphicon-user" th:text="${user.account}"></span> </a>
+        <a th:href="@{/logout}" class="btn btn-default btn-gradient" type="button"><span
+                class="glyphicons glyphicon-log-out"></span> 退出</a>
+    </div>
+</header>
+<!-- End: Header -->
+<!-- Start: Main -->
+<div id="main">
+    <!-- Start: Sidebar -->
+    <aside id="sidebar" class="affix">
+        <div id="sidebar-search">
+
+        </div>
+        <div id="sidebar-menu">
+            <ul class="nav sidebar-nav">
+                <li>
+                    <a th:href="@{/admin/toAdmin}"><span class="glyphicons glyphicon-home"></span><span
+                            class="sidebar-title">后台管理主页</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllTeachers}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">教师管理</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllStudents}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">学生管理</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllLeaves}"><span class="glyphicons glyphicon-file"></span><span
+                            class="sidebar-title">学生请假信息管理</span></a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Start: Content -->
+    <section id="content">
+        <div id="topbar" class="affix">
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/toAdmin}"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li class="active">学生管理</li>
+            </ol>
+        </div>
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="panel-title">学生列表</div>
+                            <a th:href="@{/admin/toAddStudent}" class="btn btn-info btn-gradient pull-right"><span
+                                    class="glyphicons glyphicon-plus"></span> 录入学生</a>
+                        </div>
+
+                        <form id="myForm" th:action="@{/admin/findByStudentName}" method="get">
+                            <div class="search">
+                                <span>查询条件：</span>
+                                <select id="selectOption" onchange="handleStudentChange()">
+                                    <option value="0">学生名称</option>
+                                    <option value="1">学生ID</option>
+                                </select>
+                                <input type="text" class="search_input" placeholder="搜索..." id="searchInput"
+                                       name="value">
+                                <button type="submit" class="search_button" id="submitBtn">查询</button>
+                            </div>
+                        </form>
+
+                        <form th:action="@{/admin/deleteStudentsByIds}" method="post">
+                            <div class="panel-body">
+                                <table class="table table-striped table-bordered table-hover dataTable">
+                                    <tr class="active">
+                                        <th class="text-center">
+                                            <input type="checkbox" class="btn btn-gray btn-sm" id="selectAll"
+                                                   onclick="checkAll(this)" style="position:relative;left:30px"/>
+                                            <span style="margin-right: 30px; position:relative;right:25px;top:2px">全选</span>
+                                        </th>
+                                        <th>序号</th>
+                                        <th>学生ID</th>
+                                        <th>学生名称</th>
+                                        <th>性别</th>
+                                        <th>所属系</th>
+                                        <th>所属专业</th>
+                                        <th>班级</th>
+                                        <th>初始账号</th>
+                                        <th>操作</th>
+                                    </tr>
+
+                                    <tr th:each="student, stat : ${studentList}" class="success">
+                                        <td class="text-center"><input type="checkbox" th:value="${student.stuId}"
+                                                                       name="ids" class="cbox"></td>
+                                        <td th:text="${(stat.index+1)+(pageSize*(currentPage - 1))}"></td>
+                                        <td th:text="${student.stuId}"></td>
+                                        <td th:text="${student.stuName}"></td>
+                                        <td th:text="${student.gender}"></td>
+                                        <td th:text="${student.dept}"></td>
+                                        <td th:text="${student.major}"></td>
+                                        <td th:text="${student.className}"></td>
+                                        <td th:text="${student.account}"></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a th:href="@{/admin/findStudentById/{stuId}(stuId=${student.stuId})}"><span
+                                                        class="glyphicons glyphicon-pencil"></span></a>
+                                                <a onclick="return confirm('确定要删除吗？');"
+                                                   th:href="@{/admin/deleteStudentById/{stuId}(stuId=${student.stuId})}"><span
+                                                        class="glyphicons glyphicon-trash"></span></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                                <div class="pull-left">
+                                    <button type="submit" class="btn btn-default btn-gradient pull-right delall"
+                                            onclick="return confirm('确定要删除吗？');"><span
+                                            class="glyphicons glyphicon-trash"></span></button>
+                                </div>
+
+                                <div class="pull-middle" style="position:relative;left:350px;top:29px">
+                                    当前页：第<span th:text="${currentPage}"></span>页&nbsp;
+                                    总页数：<span th:text="${totalPages}"></span>页&nbsp;
+                                    总记录数：<span th:text="${totalRecords}"></span>&nbsp;
+                                    每页显示：<span th:text="${pageSize}"></span>个&nbsp;
+                                </div>
+
+                                <div class="pull-right">
+                                    <!--最前一页和上一页-->
+                                    <ul class="pagination">
+                                        <li>
+                                            <a th:if="${currentPage > 1 && (value == null or value == '')}"
+                                               th:href="@{/admin/findAllStudents(pageNum=1, pageSize=${pageSize}, value=${value})}">&lt;&lt;</a>
+
+                                            <a th:if="${currentPage > 1 && value != null && value != '' && isNumeric == false}"
+                                               th:href="@{/admin/findByStudentName(pageNum=1, pageSize=${pageSize}, value=${value})}">&lt;&lt;</a>
+
+                                            <a th:if="${currentPage > 1 && value != null && value != '' && isNumeric == true}"
+                                               th:href="@{/admin/findByStudentId(pageNum=1, pageSize=${pageSize}, value=${value})}">&lt;&lt;</a>
+                                        </li>
+
+                                        <li>
+                                            <a th:if="${currentPage > 1 && hasPrevious && (value == null or value == '')}"
+                                               th:href="@{/admin/findAllStudents(pageNum=${currentPage - 1}, pageSize=${pageSize}, value=${value})}">&lt;</a>
+
+                                            <a th:if="${currentPage > 1 && hasPrevious && value != null && value != '' && isNumeric == false}"
+                                               th:href="@{/admin/findByStudentName(pageNum=${currentPage - 1}, pageSize=${pageSize}, value=${value})}">&lt;</a>
+
+                                            <a th:if="${currentPage > 1 && hasPrevious && value != null && value != '' && isNumeric == true}"
+                                               th:href="@{/admin/findByStudentId(pageNum=${currentPage - 1}, pageSize=${pageSize}, value=${value})}">&lt;</a>
+                                        </li>
+                                    </ul>
+                                    <!--页数选项-->
+                                    <ul th:if="${totalPages > 1 && (value == null or value == '')}" class="pagination" th:id="paginator-example"
+                                        th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+
+                                        <li>
+                                            <a th:href="@{/admin/findAllStudents(pageNum=${pageNumber}, pageSize=${pageSize}, value=${value})}"
+                                               th:text="${pageNumber}" th:class="${pageNumber == currentPage} ? 'active' : ''"></a>
+                                        </li>
+
+                                    </ul>
+
+                                    <ul th:if="${totalPages > 1 && value != null && value != '' && isNumeric == false}" class="pagination" th:id="paginator-example"
+                                        th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+
+                                        <li>
+                                            <a th:href="@{/admin/findByStudentName(pageNum=${pageNumber}, pageSize=${pageSize}, value=${value})}"
+                                               th:text="${pageNumber}" th:class="${pageNumber == currentPage} ? 'active' : ''"></a>
+                                        </li>
+
+                                    </ul>
+
+                                    <ul th:if="${totalPages > 1 && value != null && value != '' && isNumeric == true}" class="pagination" th:id="paginator-example"
+                                        th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+
+                                        <li>
+                                            <a th:href="@{/admin/findByStudentId(pageNum=${pageNumber}, pageSize=${pageSize}, value=${value})}"
+                                               th:text="${pageNumber}" th:class="${pageNumber == currentPage} ? 'active' : ''"></a>
+                                        </li>
+
+                                    </ul>
+                                    <!--最后一页和下一页-->
+                                    <ul class="pagination">
+                                        <li>
+                                            <a th:if="${currentPage < totalPages && hasNext && (value == null or value == '')}"
+                                               th:href="@{/admin/findAllStudents(pageNum=${currentPage + 1}, pageSize=${pageSize}, value=${value})}">&gt;</a>
+
+                                            <a th:if="${currentPage < totalPages && hasNext && value != null && value != '' && isNumeric == false}"
+                                               th:href="@{/admin/findByStudentName(pageNum=${currentPage + 1}, pageSize=${pageSize}, value=${value})}">&gt;</a>
+
+                                            <a th:if="${currentPage < totalPages && hasNext && value != null && value != '' && isNumeric == true}"
+                                               th:href="@{/admin/findByStudentId(pageNum=${currentPage + 1}, pageSize=${pageSize}, value=${value})}">&gt;</a>
+
+                                        </li>
+                                        <li>
+                                            <a th:if="${currentPage < totalPages && (value == null or value == '')}"
+                                               th:href="@{/admin/findAllStudents(pageNum=${totalPages}, pageSize=${pageSize}, value=${value})}">&gt;&gt;</a>
+
+                                            <a th:if="${currentPage < totalPages && value != null && value != '' && isNumeric == false}"
+                                               th:href="@{/admin/findByStudentName(pageNum=${totalPages}, pageSize=${pageSize}, value=${value})}">&gt;&gt;</a>
+
+                                            <a th:if="${currentPage < totalPages && value != null && value != '' && isNumeric == true}"
+                                               th:href="@{/admin/findByStudentId(pageNum=${totalPages}, pageSize=${pageSize}, value=${value})}">&gt;&gt;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End: Content -->
+</div>
+<!-- End: Main -->
+
+
+</body>
+</html>

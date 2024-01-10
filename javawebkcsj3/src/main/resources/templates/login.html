@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>学生请假管理系统——登录</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="logo_box"><img class="logo_img" th:src="@{images/默认头像.png}"></div>
+<div class="login_box">
+   <h1 class="title">欢迎登录学生请假系统</h1>
+    <form th:action="@{/loginCheck}" class="cmxform" id="altForm" method="post">
+    <div class="input_box">
+   <input class="form-control" type="text" name="account" autocomplete="off" placeholder="用户名">
+    </div>
+    <div class="input_box">
+   <input class="form-control" type="password" name="password" placeholder="密码">
+    </div>
+    <div class="input_box">
+   <input class="form-control_code" type="text" name="code" placeholder="验证码">
+   <img class="form-control_code_img" name="imgValidate" th:src="@{/common/kaptcha}" onclick="this.src='/common/kaptcha?d='+new Date()*1"/>
+    </div>
+    <div class="radio_box">
+        <select name="roleId" style="height:34px;">
+            <option value="0" th:selected="${value == '0'}">管理员</option>
+            <option value="1" th:selected="${value == '1'}">教师</option>
+            <option value="2" th:selected="${value == '2'}">学生</option>
+        </select>
+    </div>
+   <input class="button_box_login" type="submit" value="登录"><input class="button_box_reset" type="reset" value="重置">
+
+    </form>
+    <div class="form-group" style="" >
+        <span style="font-size: 16px; color: #d2322d" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}">th:text</span>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>学生请假管理系统—-教师管理</title>
+    <!-- Core CSS  -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/glyphicons.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logo.css}">
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pages.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+
+    <!-- Boxed-Layout CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/boxed.css}">
+
+
+    <!-- Core Javascript - via CDN -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script>
+        function handleStudentChange() {
+            var select = document.getElementById('selectOption');
+            var form = document.getElementById('myForm');
+            var baseUrl = '${baseurl}';
+
+            if (select.value === '0') {
+                form.action = baseUrl + '/findByStudentName';
+            } else if(select.value === '1') {
+                form.action = baseUrl + '/findByStudentId';
+            }
+        }
+    </script>
+</head>
+<body>
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top" style="background-image: none; background-color: rgb(240, 240, 240);">
+    <div class="pull-left"><a class="navbar-brand" href="#">
+        <div class="navbar-logo"><span class="logo">学生请假管理系统</span></div>
+    </a></div>
+    <div class="pull-right header-btns">
+        <a class="user"><span class="glyphicons glyphicon-user" th:text="${user.account}"></span> </a>
+        <a th:href="@{/logout}" class="btn btn-default btn-gradient" type="button"><span
+                class="glyphicons glyphicon-log-out"></span> 退出</a>
+    </div>
+</header>
+<!-- End: Header -->
+<!-- Start: Main -->
+<div id="main">
+    <!-- Start: Sidebar -->
+    <aside id="sidebar" class="affix">
+        <div id="sidebar-search">
+
+        </div>
+        <div id="sidebar-menu">
+            <ul class="nav sidebar-nav">
+                <li>
+                    <a th:href="@{/admin/toAdmin}"><span class="glyphicons glyphicon-home"></span><span
+                            class="sidebar-title">后台管理主页</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllTeachers}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">教师管理</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllStudents}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">学生管理</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllLeaves}"><span class="glyphicons glyphicon-file"></span><span
+                            class="sidebar-title">学生请假信息管理</span></a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+
+    <!-- Start: Content -->
+    <section id="content">
+        <div id="topbar" class="affix">
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/toAdmin}"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li class="active">修改教师信息</li>
+            </ol>
+        </div>
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-10 col-lg-11 center-column">
+                    <form th:action="@{/admin/updateStudent}" method="post" class="cmxform">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="panel-title">修改教师信息</div>
+                                <div class="panel-btns pull-right margin-left">
+                                    <a th:href="@{/admin/findAllStudents}" class="btn btn-default btn-gradient dropdown-toggle"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="input-group"> <span class="input-group-addon">学生ID</span>
+                                            <input type="text" name="stuId" th:value="${t.stuId}" class="form-control" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"> <span class="input-group-addon">学生名称</span>
+                                            <input type="text" name="stuName" th:value="${t.stuName}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">性别</span>
+                                            <input type="text" name="gender" th:value="${t.gender}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">所属系</span>
+                                            <input type="text" name="dept" th:value="${t.dept}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">所属专业</span>
+                                            <input type="text" name="tel" th:value="${t.major}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">班级</span>
+                                            <input type="text" name="tel" th:value="${t.className}" class="form-control">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="roleId" th:value="2">
+                                    <input type="hidden" name="account" th:value="${t.account}">
+                                    <input type="hidden" name="password" th:value="${t.password}">
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <input type="submit" value="提交" class="submit btn btn-blue">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End: Content -->
+</div>
+<!-- End: Main -->
+
+
+</body>
+</html>

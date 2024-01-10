@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    function redirectToPreviousPage() {
+      var countdown = 3; // 设置倒计时秒数
+      var countdownDisplay = document.getElementById('countdown');
+
+      function updateCountdown() {
+        countdownDisplay.innerHTML = countdown;
+        countdown--;
+
+        if (countdown < 0) {
+          window.history.back();
+        } else {
+          setTimeout(updateCountdown, 1000); // 每秒更新倒计时
+        }
+      }
+
+      updateCountdown();
+    }
+
+    // 在页面加载完成后调用函数
+    window.onload = redirectToPreviousPage;
+    /*]]>*/
+  </script>
+</head>
+<body>
+<p>上传失败！请重新上传图片。</p>
+<p>页面将在<span id="countdown"></span>秒后返回...</p>
+</body>
+</html>

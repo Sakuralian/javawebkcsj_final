@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>学生请假管理系统—-申请请假</title>
+    <!-- Core CSS  -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/glyphicons.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logo.css}">
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pages.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+
+    <!-- Boxed-Layout CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/boxed.css}">
+
+
+    <!-- Core Javascript - via CDN -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+
+    <script>
+        function validatePhoneNumber() {
+            var telInput = document.getElementById('telInput');
+            var telValue = telInput.value.replace(/\D/g, ''); // 移除非数字字符
+            var errorDiv = document.getElementById('telError');
+
+            if (telValue.length > 11) {
+                errorDiv.textContent = '电话号码格式错误';
+                telInput.classList.add('is-invalid'); // 可以添加样式以突出显示错误
+            } else {
+                errorDiv.textContent = '';
+                telInput.classList.remove('is-invalid');
+            }
+        }
+    </script>
+
+    <script>
+        function uploadPhoto() {
+            var form = document.getElementById('teacherForm');
+            form.action = /*[[@{/upload}]]*/ '';
+            form.enctype ="multipart/form-data";
+            form.method="get";
+            form.submit();
+        }
+    </script>
+</head>
+<body>
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top" style="background-image: none; background-color: rgb(240, 240, 240);">
+    <div class="pull-left"><a class="navbar-brand" href="#">
+        <div class="navbar-logo"><span class="logo">学生请假管理系统</span> </div>
+    </a></div>
+    <div class="pull-right header-btns">
+        <a class="user"><span class="glyphicons glyphicon-user" th:text="${student.stuName}"></span> </a>
+        <a th:href="@{/logout}" class="btn btn-default btn-gradient" type="button"><span
+                class="glyphicons glyphicon-log-out"></span> 退出</a>
+    </div>
+</header>
+<!-- End: Header -->
+
+<!-- Start: Main -->
+<div id="main">
+    <!-- Start: Sidebar -->
+    <aside id="sidebar" class="affix">
+        <div id="sidebar-search">
+
+        </div>
+        <div id="sidebar-menu">
+            <ul class="nav sidebar-nav">
+                <li>
+                    <a th:href="@{/student/toStudent}"><span class="glyphicons glyphicon-home"></span><span
+                            class="sidebar-title">学生主页</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/student/findAllLeaveByStuId}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">请假记录</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/student/toAddLeave}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">请假申请</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/student/toUpdatePassword}"><span class="glyphicons glyphicon-file"></span><span
+                            class="sidebar-title">修改密码</span></a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!-- End: Sidebar -->
+
+    <!-- Start: Content -->
+    <section id="content">
+        <div id="topbar" class="affix">
+            <ol class="breadcrumb">
+                <li class="active"><a th:href="@{/student/toStudent}"><span class="glyphicon glyphicon-home"></span></a></li>
+            </ol>
+        </div>
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-10 col-lg-11 center-column">
+                    <form th:action="@{/student/addLeave}" method="post" class="cmxform" id="teacherForm">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="panel-title">请假申请</div>
+                                <div class="panel-btns pull-right margin-left">
+                                    <a th:href="@{/student/findAllLeaveByStuId}" class="btn btn-default btn-gradient dropdown-toggle"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="input-group"> <span class="input-group-addon">学生ID</span>
+                                            <input type="text" name="stuId" th:value="${student.stuId}" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"> <span class="input-group-addon">学生名称</span>
+                                            <input type="text" name="stuName" th:value="${student.stuName}" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">所属系</span>
+                                            <input type="text" name="stuDept" th:value="${student.dept}" class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">请假开始时间</span>
+                                            <input type="date" name="startDate" value="" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">请假结束时间</span>
+                                            <input type="date" name="endDate" value="" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">请假原因</span>
+                                            <textarea name="reason" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">附件</span>
+                                            <input type="file" name="file" class="form-control" value="" style="width: 300px"/>
+                                            <input type="submit" name="upload-button" value="上传"
+                                                   th:formaction="@{/student/upload}" formenctype="multipart/form-data" style="position: absolute; top:5px; left: 400px">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="audit" value="待审核">
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <input type="submit" value="提交" class="submit btn btn-blue">
+                                        <input type="reset" value="重置" class="submit btn btn-blue" style="background-color: red; margin-left: 15px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End: Content -->
+</div>
+<!-- End: Main -->
+
+
+</body>
+</html>

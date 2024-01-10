@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>学生请假管理系统—-请假审核</title>
+    <!-- Core CSS  -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/glyphicons.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/logo.css}">
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pages.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/responsive.css}">
+
+    <!-- Boxed-Layout CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/boxed.css}">
+
+
+    <!-- Core Javascript - via CDN -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+
+    <script>
+        function setAuditValue(value) {
+            document.getElementById("auditValue").value = value;
+        }
+
+        function validateForm() {
+            // 添加表单验证逻辑，根据需要处理
+            return true;
+        }
+    </script>
+</head>
+<body>
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top" style="background-image: none; background-color: rgb(240, 240, 240);">
+    <div class="pull-left"><a class="navbar-brand" href="#">
+        <div class="navbar-logo"><span class="logo">学生请假管理系统</span></div>
+    </a></div>
+    <div class="pull-right header-btns">
+        <a class="user"><span class="glyphicons glyphicon-user" th:text="${user.account}"></span> </a>
+        <a th:href="@{/logout}" class="btn btn-default btn-gradient" type="button"><span
+                class="glyphicons glyphicon-log-out"></span> 退出</a>
+    </div>
+</header>
+<!-- End: Header -->
+
+<!-- Start: Main -->
+<div id="main">
+    <!-- Start: Sidebar -->
+    <aside id="sidebar" class="affix">
+        <div id="sidebar-search">
+
+        </div>
+        <div id="sidebar-menu">
+            <ul class="nav sidebar-nav">
+                <li>
+                    <a th:href="@{/admin/toAdmin}"><span class="glyphicons glyphicon-home"></span><span
+                            class="sidebar-title">后台管理主页</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllTeachers}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">教师管理</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllStudents}"><span class="glyphicons glyphicon-user"></span><span
+                            class="sidebar-title">学生管理</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/findAllLeaves}"><span class="glyphicons glyphicon-file"></span><span
+                            class="sidebar-title">学生请假信息管理</span></a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!-- End: Sidebar -->
+
+    <!-- Start: Content -->
+    <section id="content">
+        <div id="topbar" class="affix">
+            <ol class="breadcrumb">
+                <li class="active"><a th:href="@{/admin/toAdmin}"><span class="glyphicon glyphicon-home"></span></a>
+                </li>
+            </ol>
+        </div>
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-10 col-lg-11 center-column">
+                    <form th:action="@{/admin/updateLeave}" method="post" class="cmxform">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="panel-title">审核请假信息</div>
+                                <div class="panel-btns pull-right margin-left">
+                                    <a th:href="@{/admin/findAllLeaves}"
+                                       class="btn btn-default btn-gradient dropdown-toggle"><span
+                                            class="glyphicon glyphicon-chevron-left"></span></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">学生ID</span>
+                                            <input type="text" name="stuId" th:value="${l.stuId}" class="form-control"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">学生名称</span>
+                                            <input type="text" name="stuName" th:value="${l.stuName}"
+                                                   class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">所属系</span>
+                                            <input type="text" name="stuDept" th:value="${l.stuDept}"
+                                                   class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">请假开始时间</span>
+                                            <input type="date" name="startDate"
+                                                   th:value="${#dates.format(l.startDate, 'yyyy-MM-dd')}"
+                                                   class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">请假结束时间</span>
+                                            <input type="date" name="endDate"
+                                                   th:value="${#dates.format(l.endDate, 'yyyy-MM-dd')}"
+                                                   class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group"><span class="input-group-addon">请假原因</span>
+                                            <textarea name="reason" th:text="${l.reason}" class="form-control" readonly>th:text</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">附件</span>
+                                            <div th:if="${l.file != null && l.file != ''}">
+                                                <a th:href="@{/admin/download?filename={leaveFile}(leaveFile=${l.file})}">
+                                                    <input type="text" name="file" class="form-control"
+                                                           th:value="${l.file}"
+                                                           style="width: 300px" readonly/>
+                                                </a>
+                                                <a th:href="@{/admin/download?filename={leaveFile}(leaveFile=${l.file})}"
+                                                   style="position: absolute; top:5px; left: 400px">
+                                                    <input type="button" value="下载"/>
+                                                </a>
+                                            </div>
+                                            <input th:unless="${l.file != null && l.file != ''}" type="text"
+                                                   class="form-control" value="无附件" readonly/>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <input type="hidden" name="id" th:value="${l.id}"/>
+                                <input type="hidden" name="audit" value="" id="auditValue">
+                            </div>
+
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <input type="submit" value="通过" class="submit btn btn-blue"
+                                           onclick="setAuditValue('审核通过')">
+                                    <input type="submit" value="驳回" class="submit btn btn-blue"
+                                           style="background-color: red; margin-left: 15px"
+                                           onclick="setAuditValue('被驳回')">
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </form>
+            </div>
+        </div>
+</div>
+</section>
+<!-- End: Content -->
+</div>
+<!-- End: Main -->
+
+
+</body>
+</html>
